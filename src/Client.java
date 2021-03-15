@@ -4,20 +4,20 @@ import java.nio.charset.StandardCharsets;
 
 public class Client {
     private static Socket client;
-    private static BufferedReader in;
-    private static BufferedWriter out;
-    private static String str = "Меня зовут так то";
+    private static DataInputStream inStream;
+    private static DataOutputStream outStream;
+    private static String str = "Alex";
 
     public static void main(String[] args) {
 
             try {
-                client = new Socket("localhost", 3310);
-                out = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
-                in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                client = new Socket("localhost", 3320);
+                inStream= new DataInputStream(client.getInputStream());
+                outStream=new DataOutputStream((client.getOutputStream()));
 
-                out.write( str.getBytes("UTF-8") + "\n");
-                out.flush();
-                System.out.println(in.readLine());
+                outStream.writeUTF(str);
+                outStream.flush();
+                System.out.println(inStream.readUTF());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -25,8 +25,6 @@ public class Client {
             finally {
                     try {
                      client.close();
-                     in.close();
-                     out.close();
                  } catch (IOException e) {
                     e.printStackTrace();
                 }
